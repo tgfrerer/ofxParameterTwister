@@ -9,15 +9,16 @@ class ofApp : public ofBaseApp{
 	pal::Kontrol::MidiFighter mKontrol1;
 
 	ofParameterGroup mParamGroupA{ "group A",
-		ofParameter<float>{"float a 0", 0.5, 0.0, 1.0}, 
-		ofParameter<float>{"float a 1", 0.5, 0.0, 1.0},
-		ofParameter<float>{"float a 2", 0.5, 0.0, 1.0},
+		ofParameter<float>{"float a 0", 0.7f, 0.0, 1.0}, 
+		ofParameter<float>{"float a 1", 0.2f, 0.0, 1.0},
+		ofParameter<float>{"float a 2", 0.6f, 0.0, 1.0},
 	};
 	
 	ofParameterGroup mParamGroupB{ "group B",
-		ofParameter<float>{"float b 0", 0.5, 0.0, 1.0},
+		ofParameter<float>{"float b 0", 0.2f, 0.0, 1.0},
 		ofParameter<bool>{"bool b 1", true},
-		ofParameter<float>{"float b 2", 0.5, 0.0, 1.0},
+		ofParameter<float>{"float b 2", 0.8f, 0.0, 1.0},
+		ofParameter<float>{"float b 3", 0.9f, 0.0, 1.0},
 	};
 
 	ofParameterGroup mParamAlias = mParamGroupA;

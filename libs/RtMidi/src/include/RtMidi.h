@@ -45,6 +45,8 @@
 
 #define RTMIDI_VERSION "2.1.0"
 
+#define __WINDOWS_MM__
+
 #include <exception>
 #include <iostream>
 #include <string>

@@ -4,9 +4,8 @@
 
 #include "ofThreadChannel.h"
 #include "ofParameter.h"
+#include "RtMidi.h"
 
-class RtMidiIn; // ffdecl.
-class RtMidiOut; // ffdecl.
 
 class ofAbstractParameter;
 /*
@@ -17,16 +16,16 @@ class ofAbstractParameter;
   + re can clear a parameter group
 
   up to 16 parameters from the parameter group
-  will get bound to twister
+  bind/unbind automatically to twister:
 
-  floats and ints will get bound to knobs
-  bool will get bound to button
+  float -> rotary controller
+  bool  -> switch (button)
 
-  button state is represented using color
+  button state is represented using RGB color.
+  by default, buttons act as toggles.
 
-  parameter change outside of twister is sent to twister.
-
-
+  parameter change outside of twister is sent to twister
+  whilst parameters are bound to twister.
 
 */
 #include <cstdint> ///< we include this to get access to standard sized types
@@ -35,10 +34,10 @@ namespace pal {
 namespace Kontrol {
 
 struct MidiCCMessage {
-	uint8_t command_channel		= 0xB0;
-	uint8_t controller			= 0x00;
-	uint8_t value				= 0x00;
-	
+	uint8_t command_channel = 0xB0;
+	uint8_t controller = 0x00;
+	uint8_t value = 0x00;
+
 	int getCommand() {
 		// command is in the most significant 
 		// 4 bits, so we shift 4 bits to the right.
@@ -51,40 +50,40 @@ struct MidiCCMessage {
 		// so we null out the high bits
 		return command_channel & 0x0F;
 	};
-	
+
 };
 
-struct AbstractMidiParam {
-	virtual ~AbstractMidiParam() {};
-	virtual vector<unsigned char> getMessage() = 0;
+class Knob {
+
+	// position on the controller left to right,
+	// top to bottom
+	uint8_t pos = 0;
+
+	// knob may be either 
+	// disabled, or a rotary controller, or a switch.
+	enum class State {
+		DISABLED,
+		ROTARY,
+		SWITCH
+	} mState = State::DISABLED;
+
+	// internal representation of the knob value 
+	// may be 0..127
+	uint8_t value = 0;	 
+public:
+
+
+
 };
 
-template <typename T>
-struct MidiParam : public AbstractMidiParam {
-	uint16_t mAddr			= 0xB000;
-	ofParameter<T>* mParam	= nullptr;
-	RtMidiOut* mMidiOut		= nullptr;
-	
-	// note that the implementation does 
-	// not use templates, but only two specialisations (bool / float)
-	// as we're perfectly happy to limit ourselves
-	// to two different parameter types for now.
-	void valueChanged(T &value);
-	
-	vector<unsigned char> getMessage() override;
-};
 
 class MidiFighter
 {
-	std::unordered_map<uint16_t, std::unique_ptr<AbstractMidiParam>> mMidiParams;
-	ofParameterGroup mParamGroup;
-
 public:
-
-	MidiFighter();
 	~MidiFighter();
 
 	void setup();
+
 	void update(); // this is where we apply values.
 
 	void setParams(const ofParameterGroup& group_);
@@ -94,8 +93,9 @@ private:
 	RtMidiIn*	mMidiIn = nullptr;
 	RtMidiOut*	mMidiOut = nullptr;
 
-	ofThreadChannel<MidiCCMessage> mTch;
-	unordered_map<unsigned char, ofAbstractParameter*> mParams;
+	ofThreadChannel<MidiCCMessage> mChannelMidiIn;
+
+	ofParameterGroup mParams;
 };
 
 } // close namespace Kontrol
