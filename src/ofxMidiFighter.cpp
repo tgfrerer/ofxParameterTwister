@@ -111,6 +111,10 @@ void MidiFighter::setup() {
 		std::cout << "MIDI input exception:" << std::endl;
 		error.printMessage();
 	}
+
+   // TODO: build a default bank of 4x4 Inputs
+
+
 }
 
 
@@ -118,9 +122,18 @@ void MidiFighter::setup() {
 
 void MidiFighter::setParams(const ofParameterGroup& group_)
 {
-	// this is where we store the paramters into our internal parameter group
 
-	// first, clean up all mapped controllers.
+	/*
+	
+	based on incoming parameters, 
+	we set our 
+	
+	*/
+
+	// TODO: reset input state: switch to bank 0
+	// set values on Inputs based on corresponding parameters
+	// update Inputs to listen to correct parameter changes
+	// set Inputs to change correct parameters
 
 
 }

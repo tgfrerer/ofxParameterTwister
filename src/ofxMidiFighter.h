@@ -53,7 +53,7 @@ struct MidiCCMessage {
 
 };
 
-class Knob {
+class Input {
 
 	// position on the controller left to right,
 	// top to bottom
