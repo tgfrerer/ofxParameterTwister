@@ -43,7 +43,6 @@
 #ifndef RTMIDI_H
 #define RTMIDI_H
 
-#define __WINDOWS_MM__
 #define RTMIDI_VERSION "2.1.0"
 
 #include <exception>
