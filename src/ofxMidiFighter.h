@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-
+#include <array>
 #include "ofThreadChannel.h"
 #include "ofParameter.h"
 #include "RtMidi.h"
@@ -53,39 +53,55 @@ struct MidiCCMessage {
 
 };
 
-class Input {
 
-	// position on the controller left to right,
-	// top to bottom
-	uint8_t pos = 0;
-
-	// knob may be either 
-	// disabled, or a rotary controller, or a switch.
-	enum class State {
-		DISABLED,
-		ROTARY,
-		SWITCH
-	} mState = State::DISABLED;
-
-	// internal representation of the knob value 
-	// may be 0..127
-	uint8_t value = 0;	 
-public:
-
-
-
-};
 
 
 class MidiFighter
 {
+
+	struct Encoder {
+
+		RtMidiOut*	mMidiOut = nullptr;
+
+		// position on the controller left to right,
+		// top to bottom
+		uint8_t pos = 0;
+
+		// knob may be either 
+		// disabled, or a rotary controller, or a switch.
+		enum class State {
+			DISABLED,
+			ROTARY,
+			SWITCH
+		} mState = State::DISABLED;
+
+		// internal representation of the knob value 
+		// may be 0..127
+		uint8_t value = 0;
+
+		// event listener for parameter change
+		ofEventListener mELParamChange;
+
+		std::function<void(uint8_t v_)> updateParameter;
+
+		void setState(State s_, bool force_ = false);
+		void setValue(uint8_t v_);
+
+		void sendToSwitch(uint8_t v_);
+		void sendToRotary(uint8_t v_);
+		void setBrightnessRotary(float b_); /// brightness is normalised over 31 steps 0..30
+		void setBrightnessRGB(float b_);
+	};
+
+
 public:
+	
+	
 	~MidiFighter();
 
 	void setup();
 
 	void update(); // this is where we apply values.
-
 	void setParams(const ofParameterGroup& group_);
 
 private:
@@ -96,6 +112,9 @@ private:
 	ofThreadChannel<MidiCCMessage> mChannelMidiIn;
 
 	ofParameterGroup mParams;
+
+	std::array<MidiFighter::Encoder, 16> mEncoders;
+
 };
 
 } // close namespace Kontrol
