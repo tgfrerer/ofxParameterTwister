@@ -21,6 +21,19 @@ class ofApp : public ofBaseApp{
 		ofParameter<float>{"float b 3", 0.9f, 0.0, 1.0},
 	};
 
+
+	ofParameterGroup mParamGroupC{ "group C",
+		ofParameter<float>{"float c 0", 0.2f, 0.0, 1.0},
+		ofParameter<bool> {"bool  c 1", true},
+		ofParameter<float>{"float c 2", 0.8f, 0.0, 1.0},
+		ofParameter<float>{"bool  c 3", 0.9f, 0.0, 1.0},
+		ofParameter<bool> {"bool  c 4", true},
+		ofParameter<float>{"bool  c 5", 0.2f, 0.0, 1.0},
+		ofParameter<bool> {"bool  c 6", false},
+		ofParameter<bool> {"bool  c 7", false},
+		ofParameter<float>{"bool  c 8", 0.1f, 0.0, 1.0},
+	};
+
 	ofParameterGroup mParamAlias = mParamGroupA;
 
 	ofxPanel mPanel1;

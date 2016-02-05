@@ -37,6 +37,11 @@ void ofApp::keyPressed(int key){
 		mPanel1.add(mParamGroupB);
 		mKontrol1.setParams(mParamGroupB);
 		break;
+	case 'c':
+		mPanel1.clear();
+		mPanel1.add(mParamGroupC);
+		mKontrol1.setParams(mParamGroupC);
+		break;
 	default:
 		break;
 	}

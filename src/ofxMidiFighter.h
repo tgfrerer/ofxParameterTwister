@@ -89,6 +89,8 @@ class MidiFighter
 
 		void sendToSwitch(uint8_t v_);
 		void sendToRotary(uint8_t v_);
+
+		void setEncoderAnimation(uint8_t v_);
 		void setBrightnessRotary(float b_); /// brightness is normalised over 31 steps 0..30
 		void setBrightnessRGB(float b_);
 	};

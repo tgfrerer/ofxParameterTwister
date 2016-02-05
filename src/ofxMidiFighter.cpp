@@ -8,7 +8,7 @@
 // Wishlist
 // TODO re-eastablish midi connection if lost
 // TODO make sure to not crash when midi connection is lost
-
+// FIXME: sometimes the callback from parameter will overwrite old state back to the device
 
 using namespace pal::Kontrol;
 
@@ -39,7 +39,7 @@ void _midi_callback(double deltatime, std::vector< unsigned char > *message, voi
 			<< std::hex << 1 * msg.controller << " : "
 			<< std::hex << 1 * msg.value;
 
-		ofLogVerbose() << ostr.str();
+		ofLog() << ostr.str();
 
 		tCh->send(std::move(msg));
 	}
@@ -155,33 +155,36 @@ void MidiFighter::setParams(const ofParameterGroup& group_)
 				auto pMin = param->getMin();
 				auto pMax = param->getMax();
 
-				e.mELParamChange = param->newListener([&e, pMin, pMax](float & v_) {
-					e.setValue(ofMap(v_, pMin, pMax, 0, 127, true));
-				});
-
 				e.updateParameter = [=](uint8_t v_) {
 					param->set(ofMap(v_, 0, 127, pMin, pMax, true));
 				};
 
+				e.mELParamChange = param->newListener([&e, pMin, pMax](float v_) {
+					e.setValue(ofMap(v_, pMin, pMax, 0, 127, true));
+				});
+
 			} else if (auto param = dynamic_pointer_cast<ofParameter<bool>>(*it)) {
 				// we have a bool parameter
 				e.setState(Encoder::State::SWITCH);
-				e.setValue(*param == true ? 127 : 0);
+				e.setValue((*param == true) ? 127 : 0);
 
-				e.mELParamChange = param->newListener([&e](bool& v_) {
+				
+				e.updateParameter = [=](uint8_t v_) {
+					param->set((v_ < 64) ? true : false);
+				};
+
+				e.mELParamChange = param->newListener([&e](bool v_) {
 					e.setValue(v_ == true ? 127 : 0);
 				});
-
-				e.updateParameter = [=](uint8_t v_) {
-					param->set((v_ < 64) ? true: false);
-				};
 
 			} else {
 				// we cannot match this parameter, unfortunately
 				e.setState(Encoder::State::DISABLED);
 				e.mELParamChange = ofEventListener(); // reset listener
 			}
-			++it;
+			
+			it++;
+
 		} else {
 			// no more parameters to map.
 			e.setState(Encoder::State::DISABLED, true);
@@ -238,6 +241,7 @@ void pal::Kontrol::MidiFighter::Encoder::setState(State s_, bool force_)
 	switch (s_)
 	{
 	case pal::Kontrol::MidiFighter::Encoder::State::DISABLED:
+		setEncoderAnimation(0);
 		// we need to switch off the status LED
 		sendToSwitch(0);
 		// we need to switch off the rotary status LED
@@ -246,16 +250,15 @@ void pal::Kontrol::MidiFighter::Encoder::setState(State s_, bool force_)
 		setBrightnessRGB(1.f);
 		break;
 	case pal::Kontrol::MidiFighter::Encoder::State::ROTARY:
-		// we need to switch off the status LED
 		sendToSwitch(0);
 		setBrightnessRotary(1.f);
 		setBrightnessRGB(0.0f);
 		break;
 	case pal::Kontrol::MidiFighter::Encoder::State::SWITCH:
-		// we need to switch off the rotary status LED
 		sendToRotary(0);
-		setBrightnessRotary(0.0f);
-		setBrightnessRGB(1.f);
+		setBrightnessRotary(0.f);
+		setBrightnessRGB(1.0f);
+		setEncoderAnimation(65);
 		break;
 	default:
 		break;
@@ -300,7 +303,7 @@ void pal::Kontrol::MidiFighter::Encoder::sendToSwitch(uint8_t v_) {
 	};
 	mMidiOut->sendMessage(&msg);
 
-	ofLogVerbose() << ">>" << setw(2) << 1 * pos << " SWI " << " : " << setw(3) << v_ * 1;
+	ofLog() << ">>" << setw(2) << 1 * pos << " SWI " << " : " << setw(3) << v_ * 1;
 }
 
 // ------------------------------------------------------
@@ -364,3 +367,22 @@ void pal::Kontrol::MidiFighter::Encoder::setBrightnessRGB(float b_)
 
 }
 // ------------------------------------------------------
+
+// ------------------------------------------------------
+
+void pal::Kontrol::MidiFighter::Encoder::setEncoderAnimation(uint8_t v_)
+{
+	if (mMidiOut == nullptr)
+		return;
+
+	// ----------| invariant: midiOut is not nullptr
+
+	vector<unsigned char> msg{
+		0xB2,					// animation control channel 2
+		pos,					// device id
+		v_,
+	};
+
+	mMidiOut->sendMessage(&msg);
+
+}
