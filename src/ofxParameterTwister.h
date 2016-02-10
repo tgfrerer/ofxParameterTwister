@@ -56,7 +56,7 @@ struct MidiCCMessage {
 
 
 
-class MidiFighter
+class ofxParameterTwister
 {
 
 	struct Encoder {
@@ -99,7 +99,7 @@ class MidiFighter
 public:
 	
 	
-	~MidiFighter();
+	~ofxParameterTwister();
 
 	void setup();
 
@@ -115,7 +115,7 @@ private:
 
 	ofParameterGroup mParams;
 
-	std::array<MidiFighter::Encoder, 16> mEncoders;
+	std::array<ofxParameterTwister::Encoder, 16> mEncoders;
 
 };
 

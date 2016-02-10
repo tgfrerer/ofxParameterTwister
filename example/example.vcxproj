@@ -181,7 +181,7 @@
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSlider.cpp" />
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp" />
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxMidiFighter\src\ofxMidiFighter.cpp" />
+    <ClCompile Include="..\src\ofxParameterTwister.cpp" />
     <ClCompile Include="..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\src\RtMidi.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -195,7 +195,7 @@
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSlider.h" />
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.h" />
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h" />
-    <ClInclude Include="..\..\..\addons\ofxMidiFighter\src\ofxMidiFighter.h" />
+    <ClInclude Include="..\src\ofxParameterTwister.h" />
     <ClInclude Include="..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\include\RtMidi.h" />
   </ItemGroup>
   <ItemGroup>

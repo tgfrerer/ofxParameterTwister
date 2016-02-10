@@ -1,12 +1,12 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxMidiFighter.h"
+#include "ofxParameterTwister.h"
 #include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
-	pal::Kontrol::MidiFighter mKontrol1;
+	pal::Kontrol::ofxParameterTwister mKontrol1;
 
 	ofParameterGroup mParamGroupA{ "group A",
 		ofParameter<float>{"float a 0", 0.7f, 0.0, 1.0}, 

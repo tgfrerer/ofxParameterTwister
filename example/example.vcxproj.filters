@@ -37,11 +37,11 @@
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp">
       <Filter>addons\ofxGui\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\addons\ofxMidiFighter\src\ofxMidiFighter.cpp">
-      <Filter>addons\ofxMidiFighter\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\src\RtMidi.cpp">
-      <Filter>addons\ofxMidiFighter\libs\RtMidi\src\src</Filter>
+      <Filter>addons\ofxParameterTwister\libs\RtMidi\src\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxParameterTwister.cpp">
+      <Filter>addons\ofxParameterTwister\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,25 +57,25 @@
     <Filter Include="addons\ofxGui\src">
       <UniqueIdentifier>{645E9533-4DCD-6179-1CDF-CB65}</UniqueIdentifier>
     </Filter>
-    <Filter Include="addons\ofxMidiFighter">
+    <Filter Include="addons\ofxParameterTwister">
       <UniqueIdentifier>{2D5A49A9-93C1-C3EF-E990-8DE0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="addons\ofxMidiFighter\src">
+    <Filter Include="addons\ofxParameterTwister\src">
       <UniqueIdentifier>{71755385-87A3-F642-05AC-7B67}</UniqueIdentifier>
     </Filter>
-    <Filter Include="addons\ofxMidiFighter\libs">
+    <Filter Include="addons\ofxParameterTwister\libs">
       <UniqueIdentifier>{341B63A9-8931-3A54-BEE6-F2FA}</UniqueIdentifier>
     </Filter>
-    <Filter Include="addons\ofxMidiFighter\libs\RtMidi">
+    <Filter Include="addons\ofxParameterTwister\libs\RtMidi">
       <UniqueIdentifier>{C64FB3D8-1F30-7226-3272-CF49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="addons\ofxMidiFighter\libs\RtMidi\src">
+    <Filter Include="addons\ofxParameterTwister\libs\RtMidi\src">
       <UniqueIdentifier>{E8B65CEB-D25F-2D77-8B1D-591B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="addons\ofxMidiFighter\libs\RtMidi\src\include">
+    <Filter Include="addons\ofxParameterTwister\libs\RtMidi\src\include">
       <UniqueIdentifier>{D51DC412-C5E7-B578-13E3-3E6E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="addons\ofxMidiFighter\libs\RtMidi\src\src">
+    <Filter Include="addons\ofxParameterTwister\libs\RtMidi\src\src">
       <UniqueIdentifier>{8B5D896D-DCFE-6904-D986-409F}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -113,11 +113,11 @@
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h">
       <Filter>addons\ofxGui\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxMidiFighter\src\ofxMidiFighter.h">
-      <Filter>addons\ofxMidiFighter\src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\include\RtMidi.h">
-      <Filter>addons\ofxMidiFighter\libs\RtMidi\src\include</Filter>
+      <Filter>addons\ofxParameterTwister\libs\RtMidi\src\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxParameterTwister.h">
+      <Filter>addons\ofxParameterTwister\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,7 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md">
-      <Filter>addons\ofxMidiFighter</Filter>
+      <Filter>addons\ofxParameterTwister</Filter>
     </None>
   </ItemGroup>
 </Project>

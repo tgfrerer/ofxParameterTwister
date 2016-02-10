@@ -1,14 +1,8 @@
-#include "ofxMidiFighter.h"
+#include "ofxParameterTwister.h"
 
 #include "RtMidi.h"
 
 #include "ofParameter.h"
-
-
-// Wishlist
-// TODO re-eastablish midi connection if lost
-// TODO make sure to not crash when midi connection is lost
-// FIXME: sometimes the callback from parameter will overwrite old state back to the device
 
 using namespace pal::Kontrol;
 
@@ -39,7 +33,7 @@ void _midi_callback(double deltatime, std::vector< unsigned char > *message, voi
 			<< std::hex << 1 * msg.controller << " : "
 			<< std::hex << 1 * msg.value;
 
-		ofLog() << ostr.str();
+		ofLogVerbose() << ostr.str();
 
 		tCh->send(std::move(msg));
 	}
@@ -47,7 +41,7 @@ void _midi_callback(double deltatime, std::vector< unsigned char > *message, voi
 
 // ------------------------------------------------------
 
-MidiFighter::~MidiFighter() {
+ofxParameterTwister::~ofxParameterTwister() {
 	if (mMidiIn != nullptr) {
 		mMidiIn->closePort();
 		delete mMidiIn;
@@ -62,7 +56,7 @@ MidiFighter::~MidiFighter() {
 
 // ------------------------------------------------------
 
-void MidiFighter::setup() {
+void ofxParameterTwister::setup() {
 
 	// establish midi in connection,
 	// and bind callback for midi in.
@@ -129,9 +123,9 @@ void MidiFighter::setup() {
 
 // ------------------------------------------------------
 
-void MidiFighter::setParams(const ofParameterGroup& group_)
+void ofxParameterTwister::setParams(const ofParameterGroup& group_)
 {
-	ofLog() << "Updating mapping" << endl;
+	ofLogVerbose() << "Updating mapping" << endl;
 	/*
 
 	based on incoming parameters,
@@ -156,10 +150,13 @@ void MidiFighter::setParams(const ofParameterGroup& group_)
 				auto pMax = param->getMax();
 
 				e.updateParameter = [=](uint8_t v_) {
+					// on midi input
 					param->set(ofMap(v_, 0, 127, pMin, pMax, true));
 				};
 
 				e.mELParamChange = param->newListener([&e, pMin, pMax](float v_) {
+					// on parameter change, write from parameter 
+					// to midi.
 					e.setValue(ofMap(v_, pMin, pMax, 0, 127, true));
 				});
 
@@ -167,10 +164,9 @@ void MidiFighter::setParams(const ofParameterGroup& group_)
 				// we have a bool parameter
 				e.setState(Encoder::State::SWITCH);
 				e.setValue((*param == true) ? 127 : 0);
-
 				
 				e.updateParameter = [=](uint8_t v_) {
-					param->set((v_ < 64) ? true : false);
+					param->set((v_ > 63) ? true : false);
 				};
 
 				e.mELParamChange = param->newListener([&e](bool v_) {
@@ -195,7 +191,7 @@ void MidiFighter::setParams(const ofParameterGroup& group_)
 
 // ------------------------------------------------------
 
-void MidiFighter::update() {
+void ofxParameterTwister::update() {
 
 	MidiCCMessage m;
 
@@ -230,7 +226,7 @@ void MidiFighter::update() {
 
 // ------------------------------------------------------
 
-void pal::Kontrol::MidiFighter::Encoder::setState(State s_, bool force_)
+void pal::Kontrol::ofxParameterTwister::Encoder::setState(State s_, bool force_)
 {
 	if (s_ == mState && force_ == false) {
 		return;
@@ -240,7 +236,7 @@ void pal::Kontrol::MidiFighter::Encoder::setState(State s_, bool force_)
 
 	switch (s_)
 	{
-	case pal::Kontrol::MidiFighter::Encoder::State::DISABLED:
+	case pal::Kontrol::ofxParameterTwister::Encoder::State::DISABLED:
 		setEncoderAnimation(0);
 		// we need to switch off the status LED
 		sendToSwitch(0);
@@ -249,12 +245,12 @@ void pal::Kontrol::MidiFighter::Encoder::setState(State s_, bool force_)
 		setBrightnessRotary(0.f);
 		setBrightnessRGB(1.f);
 		break;
-	case pal::Kontrol::MidiFighter::Encoder::State::ROTARY:
+	case pal::Kontrol::ofxParameterTwister::Encoder::State::ROTARY:
 		sendToSwitch(0);
 		setBrightnessRotary(1.f);
 		setBrightnessRGB(0.0f);
 		break;
-	case pal::Kontrol::MidiFighter::Encoder::State::SWITCH:
+	case pal::Kontrol::ofxParameterTwister::Encoder::State::SWITCH:
 		sendToRotary(0);
 		setBrightnessRotary(0.f);
 		setBrightnessRGB(1.0f);
@@ -269,17 +265,17 @@ void pal::Kontrol::MidiFighter::Encoder::setState(State s_, bool force_)
 
 // ------------------------------------------------------
 
-void pal::Kontrol::MidiFighter::Encoder::setValue(uint8_t v_) {
+void pal::Kontrol::ofxParameterTwister::Encoder::setValue(uint8_t v_) {
 
 	switch (mState)
 	{
-	case pal::Kontrol::MidiFighter::Encoder::State::DISABLED:
+	case pal::Kontrol::ofxParameterTwister::Encoder::State::DISABLED:
 		ofLogError() << "cannot send value to diabled encoder" << pos;
 		break;
-	case pal::Kontrol::MidiFighter::Encoder::State::ROTARY:
+	case pal::Kontrol::ofxParameterTwister::Encoder::State::ROTARY:
 		sendToRotary(v_);
 		break;
-	case pal::Kontrol::MidiFighter::Encoder::State::SWITCH:
+	case pal::Kontrol::ofxParameterTwister::Encoder::State::SWITCH:
 		sendToSwitch(v_);
 		break;
 	default:
@@ -290,7 +286,7 @@ void pal::Kontrol::MidiFighter::Encoder::setValue(uint8_t v_) {
 
 // ------------------------------------------------------
 
-void pal::Kontrol::MidiFighter::Encoder::sendToSwitch(uint8_t v_) {
+void pal::Kontrol::ofxParameterTwister::Encoder::sendToSwitch(uint8_t v_) {
 	if (mMidiOut == nullptr)
 		return;
 
@@ -303,12 +299,12 @@ void pal::Kontrol::MidiFighter::Encoder::sendToSwitch(uint8_t v_) {
 	};
 	mMidiOut->sendMessage(&msg);
 
-	ofLog() << ">>" << setw(2) << 1 * pos << " SWI " << " : " << setw(3) << v_ * 1;
+	ofLogVerbose() << ">>" << setw(2) << 1 * pos << " SWI " << " : " << setw(3) << v_ * 1;
 }
 
 // ------------------------------------------------------
 
-void pal::Kontrol::MidiFighter::Encoder::sendToRotary(uint8_t v_) {
+void pal::Kontrol::ofxParameterTwister::Encoder::sendToRotary(uint8_t v_) {
 	if (mMidiOut == nullptr)
 		return;
 
@@ -322,12 +318,12 @@ void pal::Kontrol::MidiFighter::Encoder::sendToRotary(uint8_t v_) {
 
 	mMidiOut->sendMessage(&msg);
 
-	ofLogVerbose() << ">>" << setw(2) << 1 * pos << " ROT " << " : " << setw(3) << v_ * 1;
+	ofLog() << ">>" << setw(2) << 1 * pos << " ROT " << " : " << setw(3) << v_ * 1;
 }
 
 // ------------------------------------------------------
 
-void pal::Kontrol::MidiFighter::Encoder::setBrightnessRotary(float b_)
+void pal::Kontrol::ofxParameterTwister::Encoder::setBrightnessRotary(float b_)
 {
 	if (mMidiOut == nullptr)
 		return;
@@ -348,7 +344,7 @@ void pal::Kontrol::MidiFighter::Encoder::setBrightnessRotary(float b_)
 
 // ------------------------------------------------------
 
-void pal::Kontrol::MidiFighter::Encoder::setBrightnessRGB(float b_)
+void pal::Kontrol::ofxParameterTwister::Encoder::setBrightnessRGB(float b_)
 {
 	if (mMidiOut == nullptr)
 		return;
@@ -370,7 +366,7 @@ void pal::Kontrol::MidiFighter::Encoder::setBrightnessRGB(float b_)
 
 // ------------------------------------------------------
 
-void pal::Kontrol::MidiFighter::Encoder::setEncoderAnimation(uint8_t v_)
+void pal::Kontrol::ofxParameterTwister::Encoder::setEncoderAnimation(uint8_t v_)
 {
 	if (mMidiOut == nullptr)
 		return;
