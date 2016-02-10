@@ -1,2 +1,2 @@
 ofxGui
-ofxMidiFighter
+ofxParameterTwister

@@ -45,7 +45,9 @@
 
 #define RTMIDI_VERSION "2.1.0"
 
+#ifndef __MACOSX_CORE__
 #define __WINDOWS_MM__
+#endif
 
 #include <exception>
 #include <iostream>
