@@ -318,7 +318,7 @@ void pal::Kontrol::ofxParameterTwister::Encoder::sendToRotary(uint8_t v_) {
 
 	mMidiOut->sendMessage(&msg);
 
-	ofLog() << ">>" << setw(2) << 1 * pos << " ROT " << " : " << setw(3) << v_ * 1;
+	ofLogVerbose() << ">>" << setw(2) << 1 * pos << " ROT " << " : " << setw(3) << v_ * 1;
 }
 
 // ------------------------------------------------------
