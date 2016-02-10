@@ -12,7 +12,7 @@ The emphasis is on ease and pleasure of use.
 
 # Use
 	
-	// .h file:
+.h file:
 
 	pal::Kontrol::ofxParameterTwister mTwister;
 	
@@ -27,13 +27,14 @@ The emphasis is on ease and pleasure of use.
 		mParam3,
 	};
 
-	// .cpp file:
+.cpp file:
 
 	mTwister.setup();
 
 	// automatically sets up twister to track up to 16 parameters in params
 	// you can use setParams to hot-swap parameter groups into the twister.
-	mTwister.setParams(parameters);	
+  
+	mTwister.setParams(params);	
 
 	// in update()
 
