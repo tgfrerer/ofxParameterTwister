@@ -33,30 +33,34 @@ The emphasis is on ease and pleasure of use.
 
 Input: We're expecting our midi messges to arrive as CC messages.
 
-	'CC' stands for continous controller.
+'CC' stands for continous controller.
 
-	CC messages have the (most significant) first half-byte ("nibble") set to B, so anything xB... is a continous controller message.
+CC messages have the (most significant) first half-byte ("nibble") set to B, so anything xB... is a continous controller message.
 
-	byte 0 .. controller message / channel number
+byte 0 .. controller message / channel number
 
-	rotary controller values arrive on channel 0,
-	switch controller values arrive on channel 1.
+rotary controller values arrive on channel 0,
+switch controller values arrive on channel 1.
 
-	The least significant, or the second half-byte is the channel
-	on which the signal comes in.
+The least significant, or the second half-byte is the channel
+on which the signal comes in.
 
-	CC messages have two parameter bytes:
+CC messages have two parameter bytes:
 
-	byte 1 .. controller id
-	byte 2 .. controller value
+byte 1 .. controller id
+byte 2 .. controller value
 
 
 # Wishlist
 
-	|Priority | Task|
-	|---------|-----|
-	|B        | re-eastablish midi connection if lost|
-	|B        | make sure to not crash when midi connection is lost|
+|Priority | Task|
+|---------|-----|
+|B        | re-eastablish midi connection if lost|
+|B        | make sure to not crash when midi connection is lost|
+
+# Dependencies
+
+On OS X, make sure to link your app against the *CoreMIDI.framework* (do this in "Build Phases -> Link Binary With Libraries")
 
 # Known isssues
 
@@ -95,7 +99,7 @@ I reported the issue on February 5, 2016, and am told DJ Techtools are looking i
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 </pre>
----
+
 <pre>
 
     RtMidi: realtime MIDI i/o C++ classes
