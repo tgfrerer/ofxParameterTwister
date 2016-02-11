@@ -1,16 +1,44 @@
 # ofxParameterTwister
 
-Use MidiFighter Twister to quickly tweak parameter groups
+Use [MidiFighter Twister](https://store.djtechtools.com/products/midi-fighter-twister) to quickly tweak parameter groups
+
+`ofxParameterTwister` maps an `ofParameterGroup` with up to 16 floats or bool parameters to a MidiFighter Twister Controller device. 
+
+The mapping is bidirectional, so if you update any parameter (e.g. using a gui), you will see the values updated on the Twister instantly.
 
 # Mission Statement
 
 This shall be a simple, drop in - drop out, utility to control and tweak parameters using the MidiFighter Twister.
 
-ofxParameterTwister maps an ofParameterGroup of up to 16 floats or bool parameters to a MidiFighter Twister Controller device. The mapping is bi-directional, so if you update your parameters using a gui, for example, you will see the values update on the twister instantly.
-
 The emphasis is on ease and pleasure of use.
 
-# Use
+## Current Features
+
+* include & use this addon in writing less than 10 lines of code 
+* the addon is self-contained
+* the addon is confirmed running on Windows
+* the addon is confirmed running on OS X
+* accept `ofParameterGroup` with up to 16 parameters
+	* assign an `ofParameterGroup`, and these parameters automatically become midi-controlled
+	* allow hotswapping of Parameter Groups
+* parameter type is auto-detected and auto-mapped:
+	1) `float` --> map to rotary control
+	2) `bool`  --> map to switch control
+* current parameter state shows on the midiFighter twister, and state is synchronised throughout.
+* unused encoder LEDs are kept in distinctly different state compared to active ones.
+
+## Features wishlist
+
+|Priority | Task|
+|---------|-----|
+|A 		  | upper banks shall be used to fine-tune parameters, in deltas of 1/2 range max over 128, 1/4 range over 128, 1/16 range over 127, so each higher bank should give you double precision.|
+|B        | re-eastablish midi connection if lost|
+|B        | make sure to not crash when midi connection is lost|
+
+A.. widens field of usefulness, want
+B.. boring, but important
+
+# Usage Example
 	
 .h file:
 
@@ -36,62 +64,40 @@ The emphasis is on ease and pleasure of use.
   
 	mTwister.setParams(params);	
 
-	// in update()
+	// in update():
 
-	mMidiController.update(); // any parameters currently tracked by twister will get updated here from midi values
+	mTwister.update(); // any parameters currently tracked by twister will get updated here from midi values
 
-	// in draw();
+	// in draw():
 
 	ofSetColor(ofColor::white);
 	ofDrawBitmapString(mParam1, 10, 10);
 	ofDrawBitmapString(mParam2, 10, 30);
 	ofDrawBitmapString(mParam3, 10, 40);
 
-
-
-## Goals: 
-
-* include & use this addon writing less than 10 lines of code 
-* accept `ofParameterGroup` of up to 16 paramters
-	* assign an `ofParameterGroup` to the addon object, and these parameters become midi-controlled
-	* allow hotswapping of `ofParameterGroup` s
-* parameter type is auto-detected and auto-mapped:
-	1) `float` --> map to rotary control
-	2) `bool`  --> map to switch control
-* current parameter state shows on the midiFighter twister, and state is maintained in sync throughout.
-* unused parameters controllers indicator LEDs are kept in distinctly different state compared to active ones.
-* upper banks shall be used to fine-tune parameters, in deltas of 1/2 range max over 128, 1/4 range over 128, 1/16 range over 127, so each higher bank should give you double precision.
-* the addon is self-contained
-* the addon is confirmed running on Windows
-* the addon is confirmed running on OS X 
+Also see the included example. 
 
 ## Midi message structure:
 
-Input: We're expecting our midi messges to arrive as CC messages.
+	Input: We're expecting our midi messges to arrive as CC messages.
 
-'CC' stands for continous controller.
+	'CC' stands for continous controller.
 
-CC messages have the (most significant) first half-byte ("nibble") set to B, so anything xB... is a continous controller message.
+	CC messages have the (most significant) first half-byte ("nibble") set to B, so anything xB... is a continous controller message.
 
-byte 0 .. controller message / channel number
+	byte 0 .. controller message / channel number
 
-rotary controller values arrive on channel 0,
-switch controller values arrive on channel 1.
+	rotary controller values arrive on channel 0,
+	switch controller values arrive on channel 1.
 
-The least significant, or the second half-byte is the channel
-on which the signal comes in.
+	The least significant, or the second half-byte is the channel
+	on which the signal comes in.
 
-CC messages have two parameter bytes:
+	CC messages have two parameter bytes:
 
-byte 1 .. controller id
-byte 2 .. controller value
+	byte 1 .. controller id
+	byte 2 .. controller value
 
-# Wishlist
-
-|Priority | Task|
-|---------|-----|
-|B        | re-eastablish midi connection if lost|
-|B        | make sure to not crash when midi connection is lost|
 
 # Dependencies
 
