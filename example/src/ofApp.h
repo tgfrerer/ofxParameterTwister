@@ -3,40 +3,50 @@
 #include "ofMain.h"
 #include "ofxParameterTwister.h"
 #include "ofxGui.h"
+#include "ofxSmartShader.h"
 
 class ofApp : public ofBaseApp{
 
-	pal::Kontrol::ofxParameterTwister mKontrol1;
+	ofCamera mCam1;
 
-	ofParameterGroup mParamGroupA{ "group A",
-		ofParameter<float>{"float a 0", 0.7f, 0.0, 1.0}, 
-		ofParameter<float>{"float a 1", 0.2f, 0.0, 1.0},
-		ofParameter<float>{"float a 2", 0.6f, 0.0, 1.0},
-	};
-	
-	ofParameterGroup mParamGroupB{ "group B",
-		ofParameter<float>{"float b 0", 0.2f, 0.0, 1.0},
-		ofParameter<bool>{"bool b 1", true},
-		ofParameter<float>{"float b 2", 0.8f, 0.0, 1.0},
-		ofParameter<float>{"float b 3", 0.9f, 0.0, 1.0},
-	};
+	pal::Kontrol::ofxParameterTwister mTwister;
 
+	ofParameter<float> 	mParamH{ "H", 0.f, 0.f, 255.f };
+	ofParameter<float> 	mParamS{ "S", 0.f, 0.f, 255.f };
+	ofParameter<float> 	mParamB{ "B", 255.f, 0.f, 255.f };
+	ofParameter<float> 	mParamA{ "A", 255.f, 0.f, 255.f };
+	ofParameter<bool> 	mParamUseAlpha{ "UseAlpha", true };
+	ofParameter<bool> 	mParamShouldDrawInfo{ "Toggle Info Text", true };
 
-	ofParameterGroup mParamGroupC{ "group C",
-		ofParameter<float>{"float c 0", 0.2f, 0.0, 1.0},
-		ofParameter<bool> {"bool  c 1", true},
-		ofParameter<float>{"float c 2", 0.8f, 0.0, 1.0},
-		ofParameter<float>{"bool  c 3", 0.9f, 0.0, 1.0},
-		ofParameter<bool> {"bool  c 4", true},
-		ofParameter<float>{"bool  c 5", 0.2f, 0.0, 1.0},
-		ofParameter<bool> {"bool  c 6", false},
-		ofParameter<bool> {"bool  c 7", false},
-		ofParameter<float>{"bool  c 8", 0.1f, 0.0, 1.0},
+	ofParameterGroup paramsColor{
+		"Color",
+		mParamH,
+		mParamS,
+		mParamB,
+		mParamA,
+		mParamUseAlpha,
 	};
 
-	ofParameterGroup mParamAlias = mParamGroupA;
+	ofParameter<float> 	mParamSize{ "Size", 75.f, 30.f, 400.f };
+	ofParameter<float> 	mParamResolution{ "Resolution", 1.f, 0.5f, 4.f };
+	ofParameter<bool> 	mParamIsWireframe{ "WireFrame", true };
+
+	ofParameterGroup paramsShape{
+		"Shape",
+		mParamSize,
+		mParamResolution,
+		mParamIsWireframe,
+		mParamShouldDrawInfo,
+	};
 
 	ofxPanel mPanel1;
+
+	ofxSmartShader mShdRender = { {
+	{ GL_VERTEX_SHADER, "shader.vert" },
+	{ GL_FRAGMENT_SHADER, "shader.frag" },
+	} };
+
+	ofTexture mTexture;
 
 	public:
 		void setup();

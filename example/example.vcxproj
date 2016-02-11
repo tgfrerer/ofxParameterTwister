@@ -95,14 +95,14 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxMidiFighter\libs;..\..\..\addons\ofxMidiFighter\libs\RtMidi;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\include;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\src;..\..\..\addons\ofxMidiFighter\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxMidiFighter\libs;..\..\..\addons\ofxMidiFighter\libs\RtMidi;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\include;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\src;..\..\..\addons\ofxMidiFighter\src;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\src;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src\include;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src\src;
+C:\Users\Tim\Documents\developer\of\addons\ofxSmartShader\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
@@ -114,15 +114,15 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxMidiFighter\libs;..\..\..\addons\ofxMidiFighter\libs\RtMidi;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\include;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\src;..\..\..\addons\ofxMidiFighter\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\src;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src\include;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src\src;
+C:\Users\Tim\Documents\developer\of\addons\ofxSmartShader\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
@@ -133,7 +133,8 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxMidiFighter\libs;..\..\..\addons\ofxMidiFighter\libs\RtMidi;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\include;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\src;..\..\..\addons\ofxMidiFighter\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxMidiFighter\libs;..\..\..\addons\ofxMidiFighter\libs\RtMidi;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\include;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\src;..\..\..\addons\ofxMidiFighter\src;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\src;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src\include;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src\src;
+C:\Users\Tim\Documents\developer\of\addons\ofxSmartShader\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -144,7 +145,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
@@ -155,7 +155,8 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxMidiFighter\libs;..\..\..\addons\ofxMidiFighter\libs\RtMidi;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\include;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\src;..\..\..\addons\ofxMidiFighter\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxMidiFighter\libs;..\..\..\addons\ofxMidiFighter\libs\RtMidi;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\include;..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\src;..\..\..\addons\ofxMidiFighter\src;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\src;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src\include;C:\Users\Tim\Documents\developer\of\addons\ofxParameterTwister\libs\RtMidi\src\src;
+C:\Users\Tim\Documents\developer\of\addons\ofxSmartShader\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -165,12 +166,14 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ofxSmartShader\src\ofxSmartShader.cpp" />
+    <ClCompile Include="..\libs\RtMidi\src\src\RtMidi.cpp" />
+    <ClCompile Include="..\src\ofxParameterTwister.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxBaseGui.cpp" />
@@ -181,10 +184,11 @@
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSlider.cpp" />
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp" />
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp" />
-    <ClCompile Include="..\src\ofxParameterTwister.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\src\RtMidi.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ofxSmartShader\src\ofxSmartShader.h" />
+    <ClInclude Include="..\libs\RtMidi\src\include\RtMidi.h" />
+    <ClInclude Include="..\src\ofxParameterTwister.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxBaseGui.h" />
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxButton.h" />
@@ -195,8 +199,6 @@
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSlider.h" />
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.h" />
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h" />
-    <ClInclude Include="..\src\ofxParameterTwister.h" />
-    <ClInclude Include="..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\include\RtMidi.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">
@@ -209,14 +211,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/D_DEBUG %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(OF_ROOT)\libs\openFrameworksCompiled\project\vs</AdditionalIncludeDirectories>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\README.md">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DeploymentContent>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</DeploymentContent>
-    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

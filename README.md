@@ -31,51 +31,60 @@ The emphasis is on ease and pleasure of use.
 
 |Priority | Task|
 |---------|-----|
-|A 		  | upper banks shall be used to fine-tune parameters, in deltas of 1/2 range max over 128, 1/4 range over 128, 1/16 range over 127, so each higher bank should give you double precision.|
+|A 		  | upper banks shall be used to fine-tune parameters, in deltas of 1/2 range max over 128, 1/4 range over 128, 1/16 range over 128, so each higher bank should give you double precision.|
 |B        | re-eastablish midi connection if lost|
 |B        | make sure to not crash when midi connection is lost|
 
-A.. widens field of usefulness, want
-B.. boring, but important
+	Legend: 
+	A.. Widens field of options, want
+	B.. Boring, but important
+	C.. Nice to have
 
 # Usage Example
-	
+
 .h file:
+```cpp	
+pal::Kontrol::ofxParameterTwister mTwister;
 
-	pal::Kontrol::ofxParameterTwister mTwister;
-	
-	ofParameter<float> 	mParam1 {"First  Param", 0.f, 0.f, 1.0f};
-	ofParameter<bool> 	mParam2 {"Second Param", false};
-	ofParameter<float> 	mParam3 {"Third  Param", 0.f, 0.f, 1.0f};
+ofParameter<float> 	mParam1 {"First  Param", 0.f, 0.f, 1.0f};
+ofParameter<bool> 	mParam2 {"Second Param", false};
+ofParameter<float> 	mParam3 {"Third  Param", 0.f, 0.f, 1.0f};
 
-	ofParameterGroup params {
-		"Parameters",
-		mParam1,
-		mParam2,
-		mParam3,
-	};
+ofParameterGroup params {
+	"Parameters",
+	mParam1,
+	mParam2,
+	mParam3,
+};
+```
 
 .cpp file:
 
-	mTwister.setup();
+```cpp
+mTwister.setup();
 
-	// automatically sets up twister to track up to 16 parameters in params
-	// you can use setParams to hot-swap parameter groups into the twister.
-  
-	mTwister.setParams(params);	
+// automatically sets up twister to track up to 16 parameters in params
+// you can use setParams to hot-swap parameter groups into the twister.
 
-	// in update():
+mTwister.setParams(params);	
 
-	mTwister.update(); // any parameters currently tracked by twister will get updated here from midi values
+// in update():
 
-	// in draw():
+mTwister.update(); // any parameters currently tracked by twister will get updated here from midi values
 
-	ofSetColor(ofColor::white);
-	ofDrawBitmapString(mParam1, 10, 10);
-	ofDrawBitmapString(mParam2, 10, 30);
-	ofDrawBitmapString(mParam3, 10, 40);
+// in draw():
 
-Also see the included example. 
+ofSetColor(ofColor::white);
+ofDrawBitmapString(mParam1, 10, 10);
+ofDrawBitmapString(mParam2, 10, 30);
+ofDrawBitmapString(mParam3, 10, 40);
+```
+
+Also see the included example.
+
+# Included Example:
+
+ ![example image](http://poniesandlight.co.uk/static/parameter_twister_example.png)
 
 ## Midi message structure:
 

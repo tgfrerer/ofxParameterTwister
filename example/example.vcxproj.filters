@@ -37,11 +37,14 @@
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp">
       <Filter>addons\ofxGui\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\src\RtMidi.cpp">
-      <Filter>addons\ofxParameterTwister\libs\RtMidi\src\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\ofxParameterTwister.cpp">
       <Filter>addons\ofxParameterTwister\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\RtMidi\src\src\RtMidi.cpp">
+      <Filter>addons\ofxParameterTwister\libs\RtMidi\src\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxSmartShader\src\ofxSmartShader.cpp">
+      <Filter>addons\ofxSmartShader\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,25 +61,31 @@
       <UniqueIdentifier>{645E9533-4DCD-6179-1CDF-CB65}</UniqueIdentifier>
     </Filter>
     <Filter Include="addons\ofxParameterTwister">
-      <UniqueIdentifier>{2D5A49A9-93C1-C3EF-E990-8DE0}</UniqueIdentifier>
+      <UniqueIdentifier>{5a45d8ac-4dca-4c27-a1ef-d8fe37b26408}</UniqueIdentifier>
     </Filter>
     <Filter Include="addons\ofxParameterTwister\src">
-      <UniqueIdentifier>{71755385-87A3-F642-05AC-7B67}</UniqueIdentifier>
+      <UniqueIdentifier>{5cf6f46c-4f5b-49ea-ab5a-8e13ec3e5205}</UniqueIdentifier>
     </Filter>
     <Filter Include="addons\ofxParameterTwister\libs">
-      <UniqueIdentifier>{341B63A9-8931-3A54-BEE6-F2FA}</UniqueIdentifier>
+      <UniqueIdentifier>{b5329c2a-e8fb-45e8-842d-75d9d3fd548d}</UniqueIdentifier>
     </Filter>
     <Filter Include="addons\ofxParameterTwister\libs\RtMidi">
-      <UniqueIdentifier>{C64FB3D8-1F30-7226-3272-CF49}</UniqueIdentifier>
+      <UniqueIdentifier>{ec016409-c81a-472b-b1f6-11290547e953}</UniqueIdentifier>
     </Filter>
     <Filter Include="addons\ofxParameterTwister\libs\RtMidi\src">
-      <UniqueIdentifier>{E8B65CEB-D25F-2D77-8B1D-591B}</UniqueIdentifier>
+      <UniqueIdentifier>{a23c2acc-6f64-4ac5-8268-07e41f651158}</UniqueIdentifier>
     </Filter>
     <Filter Include="addons\ofxParameterTwister\libs\RtMidi\src\include">
-      <UniqueIdentifier>{D51DC412-C5E7-B578-13E3-3E6E}</UniqueIdentifier>
+      <UniqueIdentifier>{85b0a63e-bec0-4080-a05f-5a529f1ff9df}</UniqueIdentifier>
     </Filter>
     <Filter Include="addons\ofxParameterTwister\libs\RtMidi\src\src">
-      <UniqueIdentifier>{8B5D896D-DCFE-6904-D986-409F}</UniqueIdentifier>
+      <UniqueIdentifier>{3397ce72-95c2-49e2-b04e-2e5c31eda505}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxSmartShader">
+      <UniqueIdentifier>{8c641acc-80cb-49d2-b77f-2b898c230f09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxSmartShader\src">
+      <UniqueIdentifier>{0d100333-6be8-43cd-9b5e-46a07babf9ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -113,19 +122,17 @@
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h">
       <Filter>addons\ofxGui\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxMidiFighter\libs\RtMidi\src\include\RtMidi.h">
-      <Filter>addons\ofxParameterTwister\libs\RtMidi\src\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\ofxParameterTwister.h">
       <Filter>addons\ofxParameterTwister\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\RtMidi\src\include\RtMidi.h">
+      <Filter>addons\ofxParameterTwister\libs\RtMidi\src\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxSmartShader\src\ofxSmartShader.h">
+      <Filter>addons\ofxSmartShader\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\README.md">
-      <Filter>addons\ofxParameterTwister</Filter>
-    </None>
   </ItemGroup>
 </Project>
