@@ -1,5 +1,7 @@
 # ofxParameterTwister
 
+![img](ofxaddons_thumbnail.png)
+
 Use [MidiFighter Twister](https://store.djtechtools.com/products/midi-fighter-twister) to quickly tweak parameter groups
 
 `ofxParameterTwister` maps an `ofParameterGroup` with up to 16 floats or bool parameters to a MidiFighter Twister Controller device. 
