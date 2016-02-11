@@ -3,7 +3,6 @@
 #include "ofMain.h"
 #include "ofxParameterTwister.h"
 #include "ofxGui.h"
-#include "ofxSmartShader.h"
 
 class ofApp : public ofBaseApp{
 
@@ -41,10 +40,7 @@ class ofApp : public ofBaseApp{
 
 	ofxPanel mPanel1;
 
-	ofxSmartShader mShdRender = { {
-	{ GL_VERTEX_SHADER, "shader.vert" },
-	{ GL_FRAGMENT_SHADER, "shader.frag" },
-	} };
+	ofShader mShdRender;
 
 	ofTexture mTexture;
 

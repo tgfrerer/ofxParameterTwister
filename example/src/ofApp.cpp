@@ -3,8 +3,6 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
 
-
-
 	// establish connection to midi device
 	mTwister.setup();
 	// set any parameters in paramsColor to be synced with 
@@ -20,7 +18,7 @@ void ofApp::setup() {
 	mCam1.setPosition(ofVec3f(0, 0, 300));
 	mCam1.lookAt({ 0, 0, 0 });
 
-	
+	mShdRender.load("shader");
 	
 	// disable TextureRect by default, use normalised texture coordinates
 	ofDisableArbTex();
@@ -36,7 +34,7 @@ void ofApp::update() {
 	// Place the above call before or after your other update code, 
 	// depending at which point during execution you want midi parameters to 
 	// affect your design
-	mShdRender.update();
+
 }
 
 //--------------------------------------------------------------
@@ -45,6 +43,9 @@ void ofApp::draw() {
 	ofBackgroundGradient(ofColor::fromHex(0x323232), ofColor::black);
 
 	ofEnableDepthTest();
+
+	// draw some graphics based on the current parameters
+
 	ofSetIcoSphereResolution(mParamResolution);
 
 	mCam1.begin();
@@ -55,7 +56,7 @@ void ofApp::draw() {
 		} else {
 			ofDisableAlphaBlending();
 		}
-		// draw a primitive based on the current parameters
+
 
 		ofSetColor(ofColor::fromHsb(mParamH, mParamS, mParamB, mParamA));
 		if (mParamIsWireframe) {
@@ -64,7 +65,7 @@ void ofApp::draw() {
 			ofFill();
 		}
 		if (mShdRender.isLoaded()) {
-			auto & shd = mShdRender.get();
+			auto & shd = mShdRender;
 			shd.begin();
 			shd.setUniformTexture("src_texture_0", mTexture, 0);
 			ofDrawIcoSphere(ofVec3f(), mParamSize);
