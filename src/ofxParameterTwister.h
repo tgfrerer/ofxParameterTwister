@@ -105,9 +105,15 @@ public:
 	void clear();
 
 	void update(); // this is where we apply values.
+
 	void setParams(const ofParameterGroup& group_);
+	void setParam(size_t idx_, ofParameter<float>& param_);
+	void setParam(size_t idx_, ofParameter<bool>& param_);
 
 private:
+
+	void setParam(Encoder& encoder_, ofParameter<float>& param_);
+	void setParam(Encoder& encoder_, ofParameter<bool>& param_);
 
 	RtMidiIn*	mMidiIn = nullptr;
 	RtMidiOut*	mMidiOut = nullptr;

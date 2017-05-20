@@ -129,8 +129,10 @@ void ofxParameterTwister::clear() {
 
 // ------------------------------------------------------
 
-void ofxParameterTwister::setParams(const ofParameterGroup& group_)
-{
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setParams(const ofParameterGroup& group_) {
 	ofLogVerbose() << "Updating mapping" << endl;
 	/*
 
@@ -147,37 +149,11 @@ void ofxParameterTwister::setParams(const ofParameterGroup& group_)
 		if (it != endIt) {
 			if (auto param = dynamic_pointer_cast<ofParameter<float>>(*it)) {
 				// bingo, we have a float param
-				e.setState(Encoder::State::ROTARY);
-				e.setValue(ofMap(*param, param->getMin(), param->getMax(), 0, 127, true));
-
-				// now set the Encoder's event listener to track 
-				// this parameter
-				auto pMin = param->getMin();
-				auto pMax = param->getMax();
-
-				e.updateParameter = [=](uint8_t v_) {
-					// on midi input
-					param->set(ofMap(v_, 0, 127, pMin, pMax, true));
-				};
-
-				e.mELParamChange = param->newListener([&e, pMin, pMax](float v_) {
-					// on parameter change, write from parameter 
-					// to midi.
-					e.setValue(ofMap(v_, pMin, pMax, 0, 127, true));
-				});
+				setParam(e, *param);
 
 			} else if (auto param = dynamic_pointer_cast<ofParameter<bool>>(*it)) {
 				// we have a bool parameter
-				e.setState(Encoder::State::SWITCH);
-				e.setValue((*param == true) ? 127 : 0);
-				
-				e.updateParameter = [=](uint8_t v_) {
-					param->set((v_ > 63) ? true : false);
-				};
-
-				e.mELParamChange = param->newListener([&e](bool v_) {
-					e.setValue(v_ == true ? 127 : 0);
-				});
+				setParam(e, *param);
 
 			} else {
 				// we cannot match this parameter, unfortunately
@@ -193,6 +169,60 @@ void ofxParameterTwister::setParams(const ofParameterGroup& group_)
 		}
 	}
 
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setParam(size_t idx_, ofParameter<float>& param_) {
+	if (idx_ < mEncoders.size()) {
+		setParam(mEncoders[idx_], param_);
+	}
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setParam(size_t idx_, ofParameter<bool>& param_) {
+	if (idx_ < mEncoders.size()) {
+		setParam(mEncoders[idx_], param_);
+	}
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setParam(Encoder& encoder_, ofParameter<float>& param_) {
+	encoder_.setState(Encoder::State::ROTARY);
+	encoder_.setValue(ofMap(param_, param_.getMin(), param_.getMax(), 0, 127, true));
+
+	// now set the Encoder's event listener to track 
+	// this parameter
+	auto pMin = param_.getMin();
+	auto pMax = param_.getMax();
+
+	encoder_.updateParameter = [&param_, pMin, pMax](uint8_t v_) {
+		// on midi input
+		param_.set(ofMap(v_, 0, 127, pMin, pMax, true));
+	};
+
+	encoder_.mELParamChange = param_.newListener([&encoder_, pMin, pMax](float v_) {
+		// on parameter change, write from parameter 
+		// to midi.
+		encoder_.setValue(ofMap(v_, pMin, pMax, 0, 127, true));
+	});
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setParam(Encoder& encoder_, ofParameter<bool>& param_) {
+	encoder_.setState(Encoder::State::SWITCH);
+	encoder_.setValue((param_ == true) ? 127 : 0);
+
+	encoder_.updateParameter = [&param_](uint8_t v_) {
+		param_.set((v_ > 63) ? true : false);
+	};
+
+	encoder_.mELParamChange = param_.newListener([&encoder_](bool v_) {
+		encoder_.setValue(v_ == true ? 127 : 0);
+	});
 }
 
 // ------------------------------------------------------
