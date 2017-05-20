@@ -120,6 +120,12 @@ void ofxParameterTwister::setup() {
 
 // ------------------------------------------------------
 
+void ofxParameterTwister::clear() {
+	for (auto & e : mEncoders) {
+		e.setState(Encoder::State::DISABLED, true);
+		e.mELParamChange = ofEventListener(); // reset listener
+	}
+}
 
 // ------------------------------------------------------
 

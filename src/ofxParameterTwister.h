@@ -102,6 +102,7 @@ public:
 	~ofxParameterTwister();
 
 	void setup();
+	void clear();
 
 	void update(); // this is where we apply values.
 	void setParams(const ofParameterGroup& group_);
