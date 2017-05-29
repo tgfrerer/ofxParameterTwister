@@ -110,10 +110,14 @@ public:
 	void setParam(size_t idx_, ofParameter<float>& param_);
 	void setParam(size_t idx_, ofParameter<bool>& param_);
 
+	void clearParam(size_t idx_);
+
 private:
 
 	void setParam(Encoder& encoder_, ofParameter<float>& param_);
 	void setParam(Encoder& encoder_, ofParameter<bool>& param_);
+
+	void clearParam(Encoder& encoder_);
 
 	RtMidiIn*	mMidiIn = nullptr;
 	RtMidiOut*	mMidiOut = nullptr;

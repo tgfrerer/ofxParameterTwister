@@ -227,6 +227,21 @@ void ofxParameterTwister::setParam(Encoder& encoder_, ofParameter<bool>& param_)
 
 // ------------------------------------------------------
 
+void ofxParameterTwister::clearParam(size_t idx_) {
+	if (idx_ < mEncoders.size()) {
+		clearParam(mEncoders[idx_]);
+	}
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::clearParam(Encoder& encoder_) {
+	encoder_.setState(Encoder::State::DISABLED);
+	encoder_.mELParamChange = ofEventListener(); // reset listener
+}
+
+// ------------------------------------------------------
+
 void ofxParameterTwister::update() {
 
 	MidiCCMessage m;
