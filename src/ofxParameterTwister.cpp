@@ -122,8 +122,7 @@ void ofxParameterTwister::setup() {
 
 void ofxParameterTwister::clear() {
 	for (auto & e : mEncoders) {
-		e.setState(Encoder::State::DISABLED, true);
-		e.mELParamChange = ofEventListener(); // reset listener
+		clearParam(e, true);
 	}
 }
 
@@ -157,8 +156,7 @@ void ofxParameterTwister::setParams(const ofParameterGroup& group_) {
 
 			} else {
 				// we cannot match this parameter, unfortunately
-				e.setState(Encoder::State::DISABLED);
-				e.mELParamChange = ofEventListener(); // reset listener
+				clearParam(e, false);
 			}
 			
 			it++;
@@ -227,16 +225,16 @@ void ofxParameterTwister::setParam(Encoder& encoder_, ofParameter<bool>& param_)
 
 // ------------------------------------------------------
 
-void ofxParameterTwister::clearParam(size_t idx_) {
+void ofxParameterTwister::clearParam(size_t idx_, bool force_) {
 	if (idx_ < mEncoders.size()) {
-		clearParam(mEncoders[idx_]);
+		clearParam(mEncoders[idx_], force_);
 	}
 }
 
 // ------------------------------------------------------
 
-void ofxParameterTwister::clearParam(Encoder& encoder_) {
-	encoder_.setState(Encoder::State::DISABLED);
+void ofxParameterTwister::clearParam(Encoder& encoder_, bool force_) {
+	encoder_.setState(Encoder::State::DISABLED, force_);
 	encoder_.mELParamChange = ofEventListener(); // reset listener
 }
 
