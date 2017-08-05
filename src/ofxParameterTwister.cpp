@@ -240,6 +240,115 @@ void ofxParameterTwister::clearParam(Encoder& encoder_, bool force_) {
 
 // ------------------------------------------------------
 
+void ofxParameterTwister::setHueRGB(size_t idx_, float hue_)
+{
+	if (idx_ < mEncoders.size()) 
+	{
+		setHueRGB(mEncoders[idx_], hue_);
+	}
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setHueRGB(Encoder& encoder_, float hue_)
+{
+	encoder_.setHueRGB(hue_);
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setBrightnessRGB(size_t idx_, float bri_)
+{
+	if (idx_ < mEncoders.size())
+	{
+		setBrightnessRGB(mEncoders[idx_], bri_);
+	}
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setBrightnessRGB(Encoder& encoder_, float bri_)
+{
+	encoder_.setBrightnessRGB(bri_);
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setAnimationRGB(size_t idx_, Animation anim_, uint8_t rate_)
+{
+	if (idx_ < mEncoders.size() && rate_ < 8)
+	{
+		setAnimationRGB(mEncoders[idx_], anim_, rate_);
+	}
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setAnimationRGB(Encoder& encoder_, Animation anim_, uint8_t rate_)
+{
+	uint8_t mode;
+	switch (anim_)
+	{
+	case Animation::Strobe:
+		mode = 1 + rate_;
+		break;
+	case Animation::Pulse:
+		mode = 9 + rate_;
+		break;
+	case Animation::Rainbow:
+	default:
+		mode = 127;
+	}
+	encoder_.setAnimation(mode);
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setBrightnessRotary(size_t idx_, float bri_)
+{
+	if (idx_ < mEncoders.size())
+	{
+		setBrightnessRotary(mEncoders[idx_], bri_);
+	}
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setBrightnessRotary(Encoder& encoder_, float bri_)
+{
+	encoder_.setBrightnessRotary(bri_);
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setAnimationRotary(size_t idx_, Animation anim_, uint8_t rate_)
+{
+	if (idx_ < mEncoders.size() && rate_ < 8 && anim_ != Animation::Rainbow)
+	{
+		setAnimationRotary(mEncoders[idx_], anim_, rate_);
+	}
+}
+
+// ------------------------------------------------------
+
+void ofxParameterTwister::setAnimationRotary(Encoder& encoder_, Animation anim_, uint8_t rate_)
+{
+	uint8_t mode;
+	switch (anim_)
+	{
+	case Animation::Strobe:
+		mode = 49 + rate_;
+		break;
+	case Animation::Pulse:
+	default:
+		mode = 57 + rate_;
+		break;
+	}
+	encoder_.setAnimation(mode);
+}
+
+// ------------------------------------------------------
+
 void ofxParameterTwister::update() {
 
 	MidiCCMessage m;
@@ -286,7 +395,6 @@ void pal::Kontrol::ofxParameterTwister::Encoder::setState(State s_, bool force_)
 	switch (s_)
 	{
 	case pal::Kontrol::ofxParameterTwister::Encoder::State::DISABLED:
-		setEncoderAnimation(0);
 		// we need to switch off the status LED
 		sendToSwitch(0);
 		// we need to switch off the rotary status LED
@@ -303,7 +411,6 @@ void pal::Kontrol::ofxParameterTwister::Encoder::setState(State s_, bool force_)
 		sendToRotary(0);
 		setBrightnessRotary(0.f);
 		setBrightnessRGB(1.0f);
-		setEncoderAnimation(65);
 		break;
 	default:
 		break;
@@ -372,17 +479,17 @@ void pal::Kontrol::ofxParameterTwister::Encoder::sendToRotary(uint8_t v_) {
 
 // ------------------------------------------------------
 
-void pal::Kontrol::ofxParameterTwister::Encoder::setBrightnessRotary(float b_)
+void pal::Kontrol::ofxParameterTwister::Encoder::setHueRGB(float h_)
 {
 	if (mMidiOut == nullptr)
 		return;
 
 	// ----------| invariant: midiOut is not nullptr
 
-	unsigned char val = std::roundf(ofMap(b_, 0.f, 1.f, 65, 95, true));
-	
+	unsigned char val = std::roundf(ofMap(h_, 0.f, 1.f, 1, 126, true));
+
 	vector<unsigned char> msg{
-		0xB2,					// animation control channel 2
+		0xB1,					// color control channel 1 
 		pos,					// device id
 		val,
 	};
@@ -411,11 +518,31 @@ void pal::Kontrol::ofxParameterTwister::Encoder::setBrightnessRGB(float b_)
 	mMidiOut->sendMessage(&msg);
 
 }
-// ------------------------------------------------------
 
 // ------------------------------------------------------
 
-void pal::Kontrol::ofxParameterTwister::Encoder::setEncoderAnimation(uint8_t v_)
+void pal::Kontrol::ofxParameterTwister::Encoder::setBrightnessRotary(float b_)
+{
+	if (mMidiOut == nullptr)
+		return;
+
+	// ----------| invariant: midiOut is not nullptr
+
+	unsigned char val = std::roundf(ofMap(b_, 0.f, 1.f, 65, 95, true));
+	
+	vector<unsigned char> msg{
+		0xB2,					// animation control channel 2
+		pos,					// device id
+		val,
+	};
+
+	mMidiOut->sendMessage(&msg);
+
+}
+
+// ------------------------------------------------------
+
+void pal::Kontrol::ofxParameterTwister::Encoder::setAnimation(uint8_t v_)
 {
 	if (mMidiOut == nullptr)
 		return;
