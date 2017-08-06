@@ -14,8 +14,8 @@ class ofApp : public ofBaseApp{
 	ofParameter<float> 	mParamS{ "S", 0.f, 0.f, 255.f };
 	ofParameter<float> 	mParamB{ "B", 255.f, 0.f, 255.f };
 	ofParameter<float> 	mParamA{ "A", 255.f, 0.f, 255.f };
-	ofParameter<bool> 	mParamUseAlpha{ "UseAlpha", true };
-	ofParameter<bool> 	mParamShouldDrawInfo{ "Toggle Info Text", true };
+	ofParameter<bool> 	mParamUseAlpha{ "Use Alpha", true };
+	ofParameter<bool> 	mParamPulseEncoders{ "Pulse Encoders", false };
 
 	ofParameterGroup paramsColor{
 		"Color",
@@ -24,11 +24,13 @@ class ofApp : public ofBaseApp{
 		mParamB,
 		mParamA,
 		mParamUseAlpha,
+		mParamPulseEncoders
 	};
 
 	ofParameter<float> 	mParamSize{ "Size", 75.f, 30.f, 400.f };
 	ofParameter<float> 	mParamResolution{ "Resolution", 1.f, 0.5f, 4.f };
 	ofParameter<bool> 	mParamIsWireframe{ "WireFrame", true };
+	ofParameter<bool> 	mParamShouldDrawInfo{ "Toggle Info Text", true };
 
 	ofParameterGroup paramsShape{
 		"Shape",
@@ -37,6 +39,10 @@ class ofApp : public ofBaseApp{
 		mParamIsWireframe,
 		mParamShouldDrawInfo,
 	};
+
+	ofParameter<bool> 	mParamDemoMode{ "Demo Mode", false };
+
+	std::vector<ofEventListener> mParamListeners;
 
 	ofxPanel mPanel1;
 
