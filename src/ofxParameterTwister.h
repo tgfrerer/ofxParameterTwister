@@ -90,23 +90,57 @@ class ofxParameterTwister
 		void sendToSwitch(uint8_t v_);
 		void sendToRotary(uint8_t v_);
 
-		void setEncoderAnimation(uint8_t v_);
-		void setBrightnessRotary(float b_); /// brightness is normalised over 31 steps 0..30
+		void setHueRGB(float h_);
 		void setBrightnessRGB(float b_);
+		void setBrightnessRotary(float b_); /// brightness is normalised over 31 steps 0..30
+
+		void setAnimation(uint8_t v_);
 	};
 
 
 public:
 	
-	
+	enum class Animation
+	{
+		NONE,
+		STROBE,
+		PULSE,
+		RAINBOW
+	};
+
 	~ofxParameterTwister();
 
 	void setup();
+	void clear();
 
 	void update(); // this is where we apply values.
+
 	void setParams(const ofParameterGroup& group_);
+	void setParam(size_t idx_, ofParameter<float>& param_);
+	void setParam(size_t idx_, ofParameter<bool>& param_);
+
+	void clearParam(size_t idx_, bool force_ = false);
+
+	void setHueRGB(size_t idx_, float hue_);
+	void setBrightnessRGB(size_t idx_, float bri_);
+	void setAnimationRGB(size_t idx_, Animation anim_, uint8_t rate_ = 0);
+	
+	void setBrightnessRotary(size_t idx_, float bri_);
+	void setAnimationRotary(size_t idx_, Animation anim_, uint8_t rate_ = 0);
 
 private:
+
+	void setParam(Encoder& encoder_, ofParameter<float>& param_);
+	void setParam(Encoder& encoder_, ofParameter<bool>& param_);
+
+	void clearParam(Encoder& encoder_, bool force_);
+
+	void setHueRGB(Encoder& encoder_, float hue_);
+	void setBrightnessRGB(Encoder& encoder_, float bri_);
+	void setAnimationRGB(Encoder& encoder_, Animation anim_, uint8_t rate_);
+
+	void setBrightnessRotary(Encoder& encoder_, float bri_);
+	void setAnimationRotary(Encoder& encoder_, Animation anim_, uint8_t rate_);
 
 	RtMidiIn*	mMidiIn = nullptr;
 	RtMidiOut*	mMidiOut = nullptr;
