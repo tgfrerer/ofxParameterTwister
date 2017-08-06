@@ -289,13 +289,16 @@ void ofxParameterTwister::setAnimationRGB(Encoder& encoder_, Animation anim_, ui
 	uint8_t mode;
 	switch (anim_)
 	{
-	case Animation::Strobe:
+	case Animation::NONE:
+		mode = 0;
+		break;
+	case Animation::STROBE:
 		mode = 1 + rate_;
 		break;
-	case Animation::Pulse:
+	case Animation::PULSE:
 		mode = 9 + rate_;
 		break;
-	case Animation::Rainbow:
+	case Animation::RAINBOW:
 	default:
 		mode = 127;
 	}
@@ -323,7 +326,7 @@ void ofxParameterTwister::setBrightnessRotary(Encoder& encoder_, float bri_)
 
 void ofxParameterTwister::setAnimationRotary(size_t idx_, Animation anim_, uint8_t rate_)
 {
-	if (idx_ < mEncoders.size() && rate_ < 8 && anim_ != Animation::Rainbow)
+	if (idx_ < mEncoders.size() && rate_ < 8 && anim_ != Animation::RAINBOW)
 	{
 		setAnimationRotary(mEncoders[idx_], anim_, rate_);
 	}
@@ -336,10 +339,13 @@ void ofxParameterTwister::setAnimationRotary(Encoder& encoder_, Animation anim_,
 	uint8_t mode;
 	switch (anim_)
 	{
-	case Animation::Strobe:
+	case Animation::NONE:
+		mode = 48;
+		break; 
+	case Animation::STROBE:
 		mode = 49 + rate_;
 		break;
-	case Animation::Pulse:
+	case Animation::PULSE:
 	default:
 		mode = 57 + rate_;
 		break;

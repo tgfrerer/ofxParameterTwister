@@ -102,9 +102,10 @@ public:
 	
 	enum class Animation
 	{
-		Strobe,
-		Pulse,
-		Rainbow
+		NONE,
+		STROBE,
+		PULSE,
+		RAINBOW
 	};
 
 	~ofxParameterTwister();
