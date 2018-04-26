@@ -1,13 +1,10 @@
 #pragma once
 
+class ofParameterGroup; //ffdecl.
+class ofxParameterTwisterImpl; // ffdecl.
+
 #include <memory>
-#include <array>
-#include "ofThreadChannel.h"
-#include "ofParameter.h"
-#include "RtMidi.h"
 
-
-class ofAbstractParameter;
 /*
 
 + internally, we hold a parametergroup
@@ -28,97 +25,22 @@ class ofAbstractParameter;
   whilst parameters are bound to twister.
 
 */
-#include <cstdint> ///< we include this to get access to standard sized types
-
-namespace pal {
-namespace Kontrol {
-
-struct MidiCCMessage {
-	uint8_t command_channel = 0xB0;
-	uint8_t controller = 0x00;
-	uint8_t value = 0x00;
-
-	int getCommand() {
-		// command is in the most significant 
-		// 4 bits, so we shift 4 bits to the right.
-		// e.g. 0xB0
-		return command_channel >> 4;
-	};
-
-	int getChannel() {
-		// channel is the least significant 4 bits,
-		// so we null out the high bits
-		return command_channel & 0x0F;
-	};
-
-};
-
-
-
 
 class ofxParameterTwister
 {
-
-	struct Encoder {
-
-		RtMidiOut*	mMidiOut = nullptr;
-
-		// position on the controller left to right,
-		// top to bottom
-		uint8_t pos = 0;
-
-		// knob may be either 
-		// disabled, or a rotary controller, or a switch.
-		enum class State {
-			DISABLED,
-			ROTARY,
-			SWITCH
-		} mState = State::DISABLED;
-
-		// internal representation of the knob value 
-		// may be 0..127
-		uint8_t value = 0;
-
-		// event listener for parameter change
-		ofEventListener mELParamChange;
-
-		std::function<void(uint8_t v_)> updateParameter;
-
-		void setState(State s_, bool force_ = false);
-		void setValue(uint8_t v_);
-
-		void sendToSwitch(uint8_t v_);
-		void sendToRotary(uint8_t v_);
-
-		void setEncoderAnimation(uint8_t v_);
-		void setBrightnessRotary(float b_); /// brightness is normalised over 31 steps 0..30
-		void setBrightnessRGB(float b_);
-	};
-
+	std::unique_ptr<ofxParameterTwisterImpl> impl;
 
 public:
 	
-	
+	ofxParameterTwister();
 	~ofxParameterTwister();
 
 	void setup();
 
-	void update(); // this is where we apply values.
+	/// Call this method once per frame to read back Midi values from Twister
+	void update(); 
 	void setParams(const ofParameterGroup& group_);
-
-private:
-
-	RtMidiIn*	mMidiIn = nullptr;
-	RtMidiOut*	mMidiOut = nullptr;
-
-	ofThreadChannel<MidiCCMessage> mChannelMidiIn;
-
-	ofParameterGroup mParams;
-
-	std::array<ofxParameterTwister::Encoder, 16> mEncoders;
 
 };
 
-} // close namespace Kontrol
-} // close namespace pal
 

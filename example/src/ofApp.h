@@ -8,7 +8,7 @@ class ofApp : public ofBaseApp{
 
 	ofCamera mCam1;
 
-	pal::Kontrol::ofxParameterTwister mTwister;
+	ofxParameterTwister mTwister;
 
 	ofParameter<float> 	mParamH{ "H", 0.f, 0.f, 255.f };
 	ofParameter<float> 	mParamS{ "S", 0.f, 0.f, 255.f };
