@@ -13,12 +13,13 @@ using namespace std;
 static const std::string MIDI_DEVICE_NAME("Midi Fighter Twister");
 
 /* We assume high resolution encoders with 14 bit resolution */
-#define MAX_ENCODER_VALUE (0x3FFF)
+#define TW_MAX_ENCODER_VALUE (0x3FFF)
 
 struct MidiCCMessage {
+
 	uint8_t command_channel = 0xB0;
-	uint8_t controller = 0x00;
-	uint8_t value = 0x00;
+	uint8_t controller      = 0x00;
+	uint8_t value           = 0x00;
 
 	int getCommand() {
 		// command is in the most significant 
@@ -75,8 +76,7 @@ struct Encoder {
 
 	RtMidiOut*	mMidiOut = nullptr;
 
-	// position on the controller left to right,
-	// top to bottom
+	// Position on the controller left to right, top to bottom (row-major)
 	uint8_t pos = 0;
 
 	// knob may be either 
@@ -87,21 +87,19 @@ struct Encoder {
 		SWITCH
 	} mState = State::DISABLED;
 
-	// internal representation of the knob value 
-	// may be 0..127
-	uint8_t value = 0;
+	// Internal hardware representation of the knob value 
 	// may be (0..3FFF) == (0..2^14-1) == (0..16383)
 
 	// event listener for parameter change
 	ofEventListener mELParamChange;
 
-	std::function<void(uint8_t v_)> updateParameter;
+	std::function<void(uint8_t v_ , uint8_t hr_)> updateParameter;
 
 	void setState(State s_, bool force_ = false);
-	void setValue(uint8_t v_);
+	void setValue(uint16_t value); 
 
 	void sendToSwitch(uint8_t v_);
-	void sendToRotary(uint8_t v_);
+	void sendToRotary(uint8_t msb, uint8_t lsb); // most significant byte, least significant byte
 
 	void setEncoderAnimation(uint8_t v_);
 	void setBrightnessRotary(float b_); /// brightness is normalised over 31 steps 0..30
@@ -121,13 +119,15 @@ class ofxParameterTwisterImpl {
 	ofParameterGroup mParams;
 
 	std::array<Encoder, 16> mEncoders;
+
+	uint8_t mHighResVelLowByte = 0; // last low byte signal received via `Bn 58 vv` message (reset after each CC message)
+
 public:
 	void setup();
 	void setParams(const ofParameterGroup& group_);
 	void update();
 	~ofxParameterTwisterImpl();
 };
-
 
 // ------------------------------------------------------
 
@@ -194,7 +194,7 @@ void Encoder::setState(State s_, bool force_) {
 		// we need to switch off the status LED
 		sendToSwitch(0);
 		// we need to switch off the rotary status LED
-		sendToRotary(0);
+		sendToRotary(0,0);
 		setBrightnessRotary(0.f);
 		setBrightnessRGB(1.f);
 		break;
@@ -204,7 +204,7 @@ void Encoder::setState(State s_, bool force_) {
 		setBrightnessRGB(0.0f);
 		break;
 	case Encoder::State::SWITCH:
-		sendToRotary(0);
+		sendToRotary(0,0);
 		setBrightnessRotary(0.f);
 		setBrightnessRGB(1.0f);
 		setEncoderAnimation(65);
@@ -218,18 +218,21 @@ void Encoder::setState(State s_, bool force_) {
 
 // ------------------------------------------------------
 
-void Encoder::setValue(uint8_t v_) {
+void Encoder::setValue(uint16_t v_) {
+
+	uint8_t msb = ((v_ >> 7) & 0x7F); // most significant byte
+	uint8_t lsb = (v_ & 0x7F);		  // least significant byte
 
 	switch (mState)
 	{
 	case Encoder::State::DISABLED:
-		ofLogError() << "cannot send value to diabled encoder" << pos;
+		ofLogError() << "Cannot send value to disabled encoder" << pos;
 		break;
 	case Encoder::State::ROTARY:
-		sendToRotary(v_);
+		sendToRotary(msb, lsb);
 		break;
 	case Encoder::State::SWITCH:
-		sendToSwitch(v_);
+		sendToSwitch(msb);
 		break;
 	default:
 		break;
@@ -246,7 +249,7 @@ void Encoder::sendToSwitch(uint8_t v_) {
 	// ----------| invariant: midiOut is not nullptr
 
 	vector<unsigned char> msg{
-		0xB1,					// // `B` means "Control Change" message, lower nibble means channel id; SWITCH listens on channel 1
+		0xB1,					// `B` means "Control Change" message, lower nibble means channel id; SWITCH listens on channel 1
 		pos,					// device id
 		v_,						// value
 	};
@@ -257,7 +260,7 @@ void Encoder::sendToSwitch(uint8_t v_) {
 
 // ------------------------------------------------------
 
-void Encoder::sendToRotary(uint8_t v_) {
+void Encoder::sendToRotary(uint8_t msb, uint8_t lsb) {
 	if (mMidiOut == nullptr)
 		return;
 
@@ -266,12 +269,12 @@ void Encoder::sendToRotary(uint8_t v_) {
 	vector<unsigned char> msg{
 		0xB0,					// `B` means "Control Change" message, lower nibble means channel id; ROTARY listens on channel 0
 		pos,					// device id
-		v_,						// value
+		msb,					// value
 	};
 
 	mMidiOut->sendMessage(&msg);
 
-	ofLogVerbose() << ">>" << setw(2) << 1 * pos << " ROT " << " : " << setw(3) << v_ * 1;
+	ofLogVerbose() << ">>" << setw(2) << 1 * pos << " ROT " << " : " << setw(3) << msb * 1;
 }
 
 // ------------------------------------------------------
@@ -431,36 +434,37 @@ void ofxParameterTwisterImpl::setParams(const ofParameterGroup & group_) {
 			if (auto param = dynamic_pointer_cast<ofParameter<float>>(*it)) {
 				// bingo, we have a float param
 				e.setState(Encoder::State::ROTARY);
-				e.setValue(ofMap(*param, param->getMin(), param->getMax(), 0, 127, true));
+				e.setValue(ofMap(*param, param->getMin(), param->getMax(), 0, TW_MAX_ENCODER_VALUE, true));
 
 				// now set the Encoder's event listener to track 
 				// this parameter
 				auto pMin = param->getMin();
 				auto pMax = param->getMax();
 
-				e.updateParameter = [=](uint8_t v_) {
+				e.updateParameter = [=](uint8_t msb, uint8_t lsb) {
+					uint16_t highRezVal = ((msb & 0x7F) << 7) | (lsb & 0x7F); 
 					// on midi input
-					param->set(ofMap(v_, 0, 127, pMin, pMax, true));
+					param->set(ofMap(highRezVal, 0, TW_MAX_ENCODER_VALUE, pMin, pMax, true));
 				};
 
 				e.mELParamChange = param->newListener([&e, pMin, pMax](float v_) {
 					// on parameter change, write from parameter 
 					// to midi.
-					e.setValue(ofMap(v_, pMin, pMax, 0, 127, true));
+					e.setValue(ofMap(v_, pMin, pMax, 0, TW_MAX_ENCODER_VALUE, true));
 				});
 
 			}
 			else if (auto param = dynamic_pointer_cast<ofParameter<bool>>(*it)) {
 				// we have a bool parameter
 				e.setState(Encoder::State::SWITCH);
-				e.setValue((*param == true) ? 127 : 0);
+				e.setValue((*param == true) ? TW_MAX_ENCODER_VALUE : 0);
 
-				e.updateParameter = [=](uint8_t v_) {
-					param->set((v_ > 63) ? true : false);
+				e.updateParameter = [=](uint8_t msb, uint8_t lsb) {
+					param->set((msb > 63) ? true : false);
 				};
 
 				e.mELParamChange = param->newListener([&e](bool v_) {
-					e.setValue(v_ == true ? 127 : 0);
+					e.setValue(v_ == true ? TW_MAX_ENCODER_VALUE : 0);
 				});
 
 			}
@@ -494,12 +498,28 @@ void ofxParameterTwisterImpl::update() {
 
 			if (m.getChannel() == 0x0) {
 				// rotary message
-				size_t encoderID = m.controller;
-				auto &e = mEncoders[encoderID];
-				if (e.mState == Encoder::State::ROTARY)
-					if (e.updateParameter)
-						e.updateParameter(m.value);
-			}
+				uint8_t encoderID = m.controller;
+
+				if (m.controller == 0x58) { // high rez velocity message
+					
+					mHighResVelLowByte = (m.value & 0x7F); // limit to lower 7 bits, 0..127
+
+				} else if (encoderID < mEncoders.size()){
+
+					auto &e = mEncoders[encoderID];
+
+					if (e.mState == Encoder::State::ROTARY) {
+						
+						// write value back to parameter
+						if (e.updateParameter) {
+							e.updateParameter(m.value, mHighResVelLowByte);
+						}
+						
+					}
+
+					mHighResVelLowByte = 0;
+				}
+			}else 
 
 			if (m.getChannel() == 0x1) {
 				// rotary message
@@ -507,7 +527,7 @@ void ofxParameterTwisterImpl::update() {
 				auto &e = mEncoders[encoderID];
 				if (e.mState == Encoder::State::SWITCH)
 					if (e.updateParameter)
-						e.updateParameter(m.value);
+						e.updateParameter(m.value,0);
 			}
 		}
 	}
