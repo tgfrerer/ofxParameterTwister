@@ -12,6 +12,9 @@ using namespace std;
 
 static const std::string MIDI_DEVICE_NAME("Midi Fighter Twister");
 
+/* We assume high resolution encoders with 14 bit resolution */
+#define MAX_ENCODER_VALUE (0x3FFF)
+
 struct MidiCCMessage {
 	uint8_t command_channel = 0xB0;
 	uint8_t controller = 0x00;
@@ -34,34 +37,37 @@ struct MidiCCMessage {
 
 // ------------------------------------------------------
 /// \brief		static callback for midi controller
-/// \detail		all this callback does is translate the message into a midi messge object
-/// and then pass is on to a the midi in thread channel
-/// so it can be processed in update.
+/// \detail		Translates the message into a midi messge object
+///             and passes it on to a thread channel so it can be processed 
+///             in update.
+/// \note 
 static void _midi_callback(double deltatime, std::vector< unsigned char > *message, void *threadChannel)
 {
-	unsigned int nBytes = message->size();
 
 	auto tCh = static_cast<ofThreadChannel<MidiCCMessage>*>(threadChannel);
 
-	// message will come in three bytes, with the first byte == 176.
+	// Default midi messages come in three bytes - any other messages will be ignored.
 
 	if (message->size() == 3) {
 
 		MidiCCMessage msg;
 		msg.command_channel = message->at(0);
-		msg.controller = message->at(1);
-		msg.value = message->at(2);
+		msg.controller      = message->at(1);
+		msg.value           = message->at(2);
 
+#ifndef NDEBUG
 		ostringstream ostr;
 		ostr
-			<< std::hex << 1 * msg.getCommand() << " : "
-			<< std::hex << 1 * msg.getChannel() << " : "
-			<< std::hex << 1 * msg.controller << " : "
-			<< std::hex << 1 * msg.value;
-
+			<< "midi message: "
+			<< "0x" << std::hex << std::setw(2) << 1 * message->at(0) << " "
+			<< "0x" << std::hex << std::setw(2) << 1 * message->at(1) << " "
+			<< "0x" << std::hex << std::setw(2) << 1 * message->at(2)
+			;
 		ofLogVerbose() << ostr.str();
-
+#endif
+		
 		tCh->send(std::move(msg));
+
 	}
 }
 
@@ -84,6 +90,7 @@ struct Encoder {
 	// internal representation of the knob value 
 	// may be 0..127
 	uint8_t value = 0;
+	// may be (0..3FFF) == (0..2^14-1) == (0..16383)
 
 	// event listener for parameter change
 	ofEventListener mELParamChange;
@@ -124,8 +131,7 @@ public:
 
 // ------------------------------------------------------
 
-ofxParameterTwister::ofxParameterTwister()
-{
+ofxParameterTwister::ofxParameterTwister() {
 }
 
 // ------------------------------------------------------
@@ -142,8 +148,8 @@ void ofxParameterTwister::setup() {
 
 // ------------------------------------------------------
 
-void ofxParameterTwister::setParams(const ofParameterGroup& group_)
-{
+void ofxParameterTwister::setParams(const ofParameterGroup& group_) {
+	
 	if (impl) {
 		impl->setParams(group_);
 	}
@@ -159,6 +165,7 @@ void ofxParameterTwister::setParams(const ofParameterGroup& group_)
 // ------------------------------------------------------
 
 void ofxParameterTwister::update() {
+
 	if (impl) {
 		impl->update();
 	}
@@ -168,12 +175,12 @@ void ofxParameterTwister::update() {
 		// call this method again.
 		update();
 	}
+
 }
 
 // ------------------------------------------------------
 
-void Encoder::setState(State s_, bool force_)
-{
+void Encoder::setState(State s_, bool force_) {
 	if (s_ == mState && force_ == false) {
 		return;
 	}
@@ -239,7 +246,7 @@ void Encoder::sendToSwitch(uint8_t v_) {
 	// ----------| invariant: midiOut is not nullptr
 
 	vector<unsigned char> msg{
-		0xB1,					// SWITCH listens on channel 1
+		0xB1,					// // `B` means "Control Change" message, lower nibble means channel id; SWITCH listens on channel 1
 		pos,					// device id
 		v_,						// value
 	};
@@ -257,7 +264,7 @@ void Encoder::sendToRotary(uint8_t v_) {
 	// ----------| invariant: midiOut is not nullptr
 
 	vector<unsigned char> msg{
-		0xB0,					// ROTARY listens on channel 0
+		0xB0,					// `B` means "Control Change" message, lower nibble means channel id; ROTARY listens on channel 0
 		pos,					// device id
 		v_,						// value
 	};
@@ -279,7 +286,7 @@ void Encoder::setBrightnessRotary(float b_)
 	unsigned char val = std::round(ofMap(b_, 0.f, 1.f, 65, 95, true));
 	
 	vector<unsigned char> msg{
-		0xB2,					// animation control channel 2
+		0xB2,					// `B` means "Control Change" message, lower nibble means channel id; ANIMATIONS are set via channel 2
 		pos,					// device id
 		val,
 	};
@@ -300,7 +307,7 @@ void Encoder::setBrightnessRGB(float b_)
 	unsigned char val = round(ofMap(b_, 0.f, 1.f, 17, 47, true));
 
 	vector<unsigned char> msg{
-		0xB2,					// animation control channel 2 
+		0xB2,					// // `B` means "Control Change" message, lower nibble means channel id; ANIMATIONS are set via channel 2 
 		pos,					// device id
 		val,
 	};
@@ -318,7 +325,7 @@ void Encoder::setEncoderAnimation(uint8_t v_)
 	// ----------| invariant: midiOut is not nullptr
 
 	vector<unsigned char> msg{
-		0xB2,					// animation control channel 2
+		0xB2,					// `B` means "Control Change" message, lower nibble means channel id; ANIMATIONS are set via channel 2
 		pos,					// device id
 		v_,
 	};
