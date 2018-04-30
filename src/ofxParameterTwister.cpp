@@ -82,9 +82,9 @@ struct Encoder {
 	// knob may be either 
 	// disabled, or a rotary controller, or a switch.
 	enum class State {
-		DISABLED,
 		ROTARY,
-		SWITCH
+		SWITCH,
+		DISABLED,
 	} mState = State::DISABLED;
 
 	// Internal hardware representation of the knob value 
@@ -100,6 +100,8 @@ struct Encoder {
 
 	void sendToSwitch(uint8_t v_);
 	void sendToRotary(uint8_t msb, uint8_t lsb); // most significant byte, least significant byte
+
+	void setEncoderPhenotype(uint8_t phenotype);
 
 	void setEncoderAnimation(uint8_t v_);
 	void setBrightnessRotary(float b_); /// brightness is normalised over 31 steps 0..30
@@ -190,24 +192,13 @@ void Encoder::setState(State s_, bool force_) {
 	switch (s_)
 	{
 	case Encoder::State::DISABLED:
-		setEncoderAnimation(0);
-		// we need to switch off the status LED
-		sendToSwitch(0);
-		// we need to switch off the rotary status LED
-		sendToRotary(0,0);
-		setBrightnessRotary(0.f);
-		setBrightnessRGB(1.f);
+		setEncoderPhenotype(2);
 		break;
 	case Encoder::State::ROTARY:
-		sendToSwitch(0);
-		setBrightnessRotary(1.f);
-		setBrightnessRGB(0.0f);
+		setEncoderPhenotype(0);
 		break;
 	case Encoder::State::SWITCH:
-		sendToRotary(0,0);
-		setBrightnessRotary(0.f);
-		setBrightnessRGB(1.0f);
-		setEncoderAnimation(65);
+		setEncoderPhenotype(1);
 		break;
 	default:
 		break;
@@ -266,6 +257,14 @@ void Encoder::sendToRotary(uint8_t msb, uint8_t lsb) {
 
 	// ----------| invariant: midiOut is not nullptr
 
+	vector<unsigned char> msgHiresPrefix{
+		0xB0,
+		0x58,
+		lsb,
+	};
+
+	mMidiOut->sendMessage(&msgHiresPrefix);
+	
 	vector<unsigned char> msg{
 		0xB0,					// `B` means "Control Change" message, lower nibble means channel id; ROTARY listens on channel 0
 		pos,					// device id
@@ -275,6 +274,25 @@ void Encoder::sendToRotary(uint8_t msb, uint8_t lsb) {
 	mMidiOut->sendMessage(&msg);
 
 	ofLogVerbose() << ">>" << setw(2) << 1 * pos << " ROT " << " : " << setw(3) << msb * 1;
+}
+
+// ------------------------------------------------------
+
+void Encoder::setEncoderPhenotype(uint8_t phenotype)
+{
+	if (mMidiOut == nullptr)
+		return;
+
+	// ----------| invariant: midiOut is not nullptr
+
+	vector<unsigned char> msg{
+		0xB4,					// `B` means "Control Change" message, lower nibble means channel id; ENCODER_CONTROL messages are set via channel 4
+		pos,					// device id
+		phenotype,
+	};
+
+	mMidiOut->sendMessage(&msg);
+
 }
 
 // ------------------------------------------------------
@@ -298,7 +316,7 @@ void Encoder::setBrightnessRotary(float b_)
 
 }
 
-// ------------------------------------------------------
+ //------------------------------------------------------
 
 void Encoder::setBrightnessRGB(float b_)
 {
