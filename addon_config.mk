@@ -63,3 +63,6 @@ common:
 	# osx/iOS only, any framework that should be included in the project
 	ADDON_FRAMEWORKS = CoreMidi
 
+linux:
+    ADDON_DEFINES += __LINUX_ALSA__
+
